@@ -26,6 +26,9 @@ const employeeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },password: {
+        type: String,
+        required: true
     }
 });
 
@@ -37,8 +40,8 @@ app.use(express.json());
 // POST API call
 app.post("/add", async (req, res) => {
     try {
-        const {  name } = req.body;
-        const employee = new Employee({name });
+        const { password, name } = req.body;
+        const employee = new Employee({name, password });
         await employee.save();
         res.status(200).json(employee);
     } catch (err) {
