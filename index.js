@@ -65,7 +65,7 @@ app.get('/all', async (req, res) => {
 app.get('/all/:id', async (req, res) => {
    
     try {
-        const employees = await Employee.find(req.params.id); 
+        const employees = await Employee.findById(req.params.id); 
 
         if(!employees){
             res.send("notFound")
