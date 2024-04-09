@@ -52,9 +52,26 @@ app.post("/add", async (req, res) => {
 // GET API call
 app.get('/all', async (req, res) => {
     try {
-        const employees = await Employee.find(); // Set timeout to 30 seconds
+        const employees = await Employee.find(); 
 
         res.json(employees);
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+app.get('/all:id', async (req, res) => {
+    const 
+    try {
+        const employees = await Employee.find(req.params.id); 
+
+        if(!employees){
+            res.send("notFound")
+        }else{
+            res.json(employees);
+        }
     } catch (error) {
         console.error('Error fetching employees:', error);
         res.status(500).json({ message: 'Internal server error' });
