@@ -63,7 +63,7 @@ app.get('/all', async (req, res) => {
 
 
 app.get('/all/:id', async (req, res) => {
-    const 
+   
     try {
         const employees = await Employee.find(req.params.id); 
 
