@@ -50,9 +50,9 @@ app.post("/add", async (req, res) => {
     }
 });
 // GET API call
-app.get('/employees', async (req, res) => {
+app.get('/all', async (req, res) => {
     try {
-        const employees = await Employee.find().maxTimeMS(30000); // Set timeout to 30 seconds
+        const employees = await Employee.find(); // Set timeout to 30 seconds
 
         res.json(employees);
     } catch (error) {
