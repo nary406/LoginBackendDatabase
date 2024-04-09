@@ -96,7 +96,7 @@ app.put("/all/:id", async (req, res) => {
 
 app.delete("/delete/:id", async(req, res)=>{
     try{
-        const deleteItem=await Employee.fintByIdAndDelete(req,params.id,)
+        const deleteItem=await Employee.fintByIdAndDelete(req.params.id,)
         res.json("deleted")
     }catch{
         res.json({message:"internal server issue"})
