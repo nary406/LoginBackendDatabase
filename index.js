@@ -40,8 +40,8 @@ app.use(express.json());
 // POST API call
 app.post("/add", async (req, res) => {
     try {
-        const { id, name } = req.body;
-        const employee = new Employee({ id, name });
+        const {  name } = req.body;
+        const employee = new Employee({name });
         await employee.save();
         res.status(200).json(employee);
     } catch (err) {
@@ -74,6 +74,24 @@ app.get('/all/:id', async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching employees:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+app.put("/all/:id", async (req, res) => {
+    try {
+        const { name } = req.body;
+        const update=await Employee.findByIdAndUpdate(req.params.id, {name})
+       
+       if(!update){
+        res.json("not updated")
+       } else{
+        res.status(200).json(update);
+       }
+       
+    } catch (err) {
+        console.error('Error creating employee:', err);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
