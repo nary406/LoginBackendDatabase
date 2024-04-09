@@ -22,10 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Define schema
 const employeeSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
+   
     name: {
         type: String,
         required: true
