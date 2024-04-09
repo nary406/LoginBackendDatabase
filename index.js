@@ -1,5 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -33,15 +35,45 @@ const employeeSchema = new mongoose.Schema({
 });
 
 // Define model
-const Employee = mongoose.model("LoginDetails", employeeSchema);
+const UserProfile = mongoose.model("LoginDetails", employeeSchema);
 
 app.use(express.json());
+
+
+// Login API call
+
+app.post('/login', async (req, res) => {
+    const { name, password } = req.body;
+    try {
+      const user = await UserProfile.findOne({ name });
+      console.log(user)
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      
+      if (!passwordMatch) {
+        return res.status(401).send('Invalid password');
+      }
+
+      const token = jwt.sign({ name: user.name }, 'secret_key');
+      res.status(200).json({ token });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Login failed');
+    }
+  });
+
 
 // POST API call
 app.post("/signup", async (req, res) => {
     try {
         const { password, name } = req.body;
-        const employee = new Employee({name, password });
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+console.log(hashedPassword)
+        const employee = new UserProfile({name, password:hashedPassword });
         await employee.save();
         res.status(200).json(employee);
     } catch (err) {
@@ -52,7 +84,7 @@ app.post("/signup", async (req, res) => {
 // GET API call
 app.get('/userdetails', async (req, res) => {
     try {
-        const employees = await Employee.find(); 
+        const employees = await UserProfile.find(); 
 
         res.json(employees);
     } catch (error) {
@@ -65,7 +97,7 @@ app.get('/userdetails', async (req, res) => {
 app.get('/user/:id', async (req, res) => {
    
     try {
-        const employees = await Employee.findById(req.params.id); 
+        const employees = await UserProfile.findById(req.params.id); 
 
         if(!employees){
             res.send("notFound")
@@ -82,7 +114,7 @@ app.get('/user/:id', async (req, res) => {
 app.put("/user/:id", async (req, res) => {
     try {
         const { name,password } = req.body;
-        const update=await Employee.findByIdAndUpdate(req.params.id, {name, password})
+        const update=await UserProfile.findByIdAndUpdate(req.params.id, {name, password})
        
        if(!update){
         res.json("not updated")
@@ -99,7 +131,7 @@ app.put("/user/:id", async (req, res) => {
 
 app.delete("/deleteuser/:id", async(req, res)=>{
     try{
-        const deleteItem=await Employee.findByIdAndDelete(req.params.id,)
+        const deleteItem=await UserProfile.findByIdAndDelete(req.params.id,)
         res.json("deleted")
     }catch{
         res.json({message:"internal server issue"})
