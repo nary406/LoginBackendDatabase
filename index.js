@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 const app = express();
 dotenv.config();
 
@@ -38,7 +38,7 @@ const employeeSchema = new mongoose.Schema({
 const UserProfile = mongoose.model("LoginDetails", employeeSchema);
 
 app.use(express.json());
-
+app.use(cors());
 
 // Login API call
 
