@@ -33,12 +33,12 @@ const employeeSchema = new mongoose.Schema({
 });
 
 // Define model
-const Employee = mongoose.model("Employee", employeeSchema);
+const Employee = mongoose.model("LoginDetails", employeeSchema);
 
 app.use(express.json());
 
 // POST API call
-app.post("/add", async (req, res) => {
+app.post("/signup", async (req, res) => {
     try {
         const { password, name } = req.body;
         const employee = new Employee({name, password });
@@ -50,7 +50,7 @@ app.post("/add", async (req, res) => {
     }
 });
 // GET API call
-app.get('/all', async (req, res) => {
+app.get('/userdetails', async (req, res) => {
     try {
         const employees = await Employee.find(); 
 
@@ -62,7 +62,7 @@ app.get('/all', async (req, res) => {
 });
 
 
-app.get('/all/:id', async (req, res) => {
+app.get('/user/:id', async (req, res) => {
    
     try {
         const employees = await Employee.findById(req.params.id); 
@@ -79,10 +79,10 @@ app.get('/all/:id', async (req, res) => {
 });
 
 
-app.put("/all/:id", async (req, res) => {
+app.put("/user/:id", async (req, res) => {
     try {
-        const { name } = req.body;
-        const update=await Employee.findByIdAndUpdate(req.params.id, {name})
+        const { name,password } = req.body;
+        const update=await Employee.findByIdAndUpdate(req.params.id, {name, password})
        
        if(!update){
         res.json("not updated")
@@ -97,7 +97,7 @@ app.put("/all/:id", async (req, res) => {
 });
 
 
-app.delete("/delete/:id", async(req, res)=>{
+app.delete("/deleteuser/:id", async(req, res)=>{
     try{
         const deleteItem=await Employee.findByIdAndDelete(req.params.id,)
         res.json("deleted")
